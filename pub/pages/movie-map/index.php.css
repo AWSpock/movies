@@ -1,8 +1,8 @@
 .data-table-row {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-areas:
-    "title title title year"
     "create_from create_from create_from create_from"
+    "title title title year"
     "created created updated updated";
 }
 
@@ -30,8 +30,8 @@
     max-width: 1000px;
   } */
   .data-table-row {
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: "title year create_from created updated";
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    grid-template-areas: "create_from title year created updated";
   }
 }
 @media only screen and (min-width: 1280px) {

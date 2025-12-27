@@ -41,24 +41,24 @@
             <h2>Search Results</h2>
 
             <form method="post" action="" id="frm">
-                <div class="search-results">
+                <div class="movies">
                     <?php
                     foreach ($search as $res) {
                     ?>
-                        <label class="search-result" for="<?php echo htmlentities($res->id()); ?>">
+                        <label class="movie-info" for="<?php echo htmlentities($res->id()); ?>">
                             <input type="radio" name="selection" value="<?php echo htmlentities($res->id()); ?>" id="<?php echo htmlentities($res->id()); ?>">
-                            <img src="/api/movie/<?php echo htmlentities($res->id()); ?>/poster" loading="lazy" />
+                            <div class="poster">
+                                <img src="/api/movie/<?php echo htmlentities($res->id()); ?>/poster" loading="lazy" />
+                            </div>
                             <div class="info">
                                 <div class="title">
-                                    <div class="label">Title</div>
-                                    <div><samp><?php echo htmlentities($res->title()); ?></samp></div>
+                                    <h2><?php echo htmlentities($res->title()); ?>
                                 </div>
-                                <div class="date">
-                                    <div class="label">Release Date</div>
-                                    <div><samp><?php echo htmlentities($res->release_date()); ?></samp></div>
+                                <div class="release_date">
+                                    <span>Release Date: </span><span data-dateonlyformatter><?php echo htmlentities($res->release_date()); ?></span>
                                 </div>
                                 <div class="overview">
-                                    <div class="label">Overview</div>
+                                    <div class="label">Overview:</div>
                                     <div><samp><?php echo htmlentities($res->overview()); ?></samp></div>
                                 </div>
                             </div>

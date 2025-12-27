@@ -55,6 +55,11 @@ class MovieRepository
         $sql = "
             SELECT a.`id`, a.`created`, a.`updated`, a.`title`, a.`order_title`, a.`overview`, a.`release_date`, a.`poster_path`, a.`poster_shard1`, a.`poster_shard2`, a.`poster_file_type`, a.`backdrop_path`
             FROM movie a
+            WHERE `id` IN (
+                SELECT movie_id
+                FROM movie_file
+                WHERE movie_id IS NOT NULL
+            )
             ORDER BY a.`order_title`, a.`release_date`
         ";
 
