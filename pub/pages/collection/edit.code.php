@@ -21,8 +21,12 @@ if (!empty($_POST)) {
         $success = true;
         $added = false;
 
+        $movies = [];
+        if (isset($_POST['collection_movie']))
+            $movies = $_POST['collection_movie'];
+
         $recCollection->addMovies($data->movies()->getMoviesForCollection($collection_id));
-        foreach ($_POST['collection_movie'] as $movie) {
+        foreach ($movies as $movie) {
             $add = true;
             foreach ($recCollection->movies() as $m) {
                 if ($m->id() == $movie) {
@@ -45,14 +49,14 @@ if (!empty($_POST)) {
         if ($success) {
             foreach ($recCollection->movies() as $m) {
                 $extra = true;
-                foreach ($_POST['collection_movie'] as $movie) {
+                foreach ($movies as $movie) {
                     if ($m->id() == $movie) {
                         $extra = false;
                         break;
                     }
                 }
                 if ($extra) {
-                    if ($collectionData->unmapMovies($recCollection, $_POST['collection_movie']) !== 1) {
+                    if ($collectionData->unmapMovies($recCollection, $movies) !== 1) {
                         $success = false;
                         $_SESSION['last_message_text'] = $collectionData->actionDataMessage;
                     } else {

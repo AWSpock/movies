@@ -210,8 +210,13 @@ class CollectionRepository
         $sql = "
             DELETE FROM movie_collection
             WHERE collection_id = ?
-                AND movie_id NOT IN (" . implode(",", $qs) . ")
         ";
+
+        if (count($movies) > 0) {
+            $sql .= "
+                AND movie_id NOT IN (" . implode(",", $qs) . ")
+            ";
+        }
 
         $result = $this->db->query($sql, $arr, $is);
 

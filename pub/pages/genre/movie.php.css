@@ -56,6 +56,7 @@
 .movie-info .info .title h2 {
   margin-block: 0;
   text-align: center;
+  font-size: 1rem;
 }
 .movie-info .info .release_date {
   grid-area: release_date;
@@ -67,6 +68,9 @@
 }
 
 @media only screen and (min-width: 768px) {
+  .movie-info .info .title h2 {
+    font-size: 1.4rem;
+  }
 }
 @media only screen and (min-width: 1024px) {
   .movies {

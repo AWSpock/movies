@@ -25,8 +25,11 @@ if (!empty($_POST)) {
         $addedGenre = false;
 
         // collections
+        $collections = [];
+        if (isset($_POST['movie_collection']))
+            $collections = $_POST['movie_collection'];
         $recMovie->addCollections($data->collections()->getCollectionsForMovie($movie_id));
-        foreach ($_POST['movie_collection'] as $collection) {
+        foreach ($collections as $collection) {
             $add = true;
             foreach ($recMovie->collections() as $c) {
                 if ($c->id() == $collection) {
@@ -49,14 +52,14 @@ if (!empty($_POST)) {
         if ($success) {
             foreach ($recMovie->collections() as $c) {
                 $extra = true;
-                foreach ($_POST['movie_collection'] as $collection) {
+                foreach ($collections as $collection) {
                     if ($c->id() == $collection) {
                         $extra = false;
                         break;
                     }
                 }
                 if ($extra) {
-                    if ($movieData->unmapCollections($recMovie, $_POST['movie_collection']) !== 1) {
+                    if ($movieData->unmapCollections($recMovie, $collections) !== 1) {
                         $success = false;
                         $_SESSION['last_message_text'] = $movieData->actionDataMessage;
                     } else {
@@ -68,8 +71,11 @@ if (!empty($_POST)) {
         }
 
         // genres
+        $genres = [];
+        if (isset($_POST['movie_genre']))
+            $genres = $_POST['movie_genre'];
         $recMovie->addGenres($data->genres()->getGenresForMovie($movie_id));
-        foreach ($_POST['movie_genre'] as $genre) {
+        foreach ($genres as $genre) {
             $add = true;
             foreach ($recMovie->genres() as $g) {
                 if ($g->id() == $genre) {
@@ -92,14 +98,14 @@ if (!empty($_POST)) {
         if ($success) {
             foreach ($recMovie->genres() as $g) {
                 $extra = true;
-                foreach ($_POST['movie_genre'] as $genre) {
+                foreach ($genres as $genre) {
                     if ($g->id() == $genre) {
                         $extra = false;
                         break;
                     }
                 }
                 if ($extra) {
-                    if ($movieData->unmapGenres($recMovie, $_POST['movie_genre']) !== 1) {
+                    if ($movieData->unmapGenres($recMovie, $genres) !== 1) {
                         $success = false;
                         $_SESSION['last_message_text'] = $movieData->actionDataMessage;
                     } else {

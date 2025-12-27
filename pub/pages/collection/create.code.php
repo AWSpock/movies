@@ -17,11 +17,13 @@ if (!empty($_POST)) {
     if ($collection_id > 0) {
         $success = true;
         $recCollection->set_id($collection_id);
-        foreach ($_POST['collection_movie'] as $movie) {
-            if ($collectionData->mapMovie($recCollection, $movie) !== 1) {
-                $success = false;
-                $_SESSION['last_message_text'] = $collectionData->actionDataMessage;
-                break;
+        if (isset($_POST['collection_movie'])) {
+            foreach ($_POST['collection_movie'] as $movie) {
+                if ($collectionData->mapMovie($recCollection, $movie) !== 1) {
+                    $success = false;
+                    $_SESSION['last_message_text'] = $collectionData->actionDataMessage;
+                    break;
+                }
             }
         }
 

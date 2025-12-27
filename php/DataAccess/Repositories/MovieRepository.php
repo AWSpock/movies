@@ -271,8 +271,13 @@ class MovieRepository
         $sql = "
             DELETE FROM movie_genre
             WHERE movie_id = ?
-                AND genre_id NOT IN (" . implode(",", $qs) . ")
         ";
+
+        if (count($genres) > 0) {
+            $sql .= "
+                AND genre_id NOT IN (" . implode(",", $qs) . ")
+            ";
+        }
 
         $result = $this->db->query($sql, $arr, $is);
 
@@ -340,8 +345,13 @@ class MovieRepository
         $sql = "
             DELETE FROM movie_collection
             WHERE movie_id = ?
-                AND collection_id NOT IN (" . implode(",", $qs) . ")
         ";
+
+        if (count($collections) > 0) {
+            $sql .= "
+                AND collection_id NOT IN (" . implode(",", $qs) . ")
+            ";
+        }
 
         $result = $this->db->query($sql, $arr, $is);
 

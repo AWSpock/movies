@@ -52,7 +52,7 @@
                             </div>
                             <div class="info">
                                 <div class="title">
-                                    <h2><?php echo htmlentities($res->title()); ?>
+                                    <h2><?php echo htmlentities($res->title()); ?></h2>
                                 </div>
                                 <div class="release_date">
                                     <span>Release Date: </span><span data-dateonlyformatter><?php echo htmlentities($res->release_date()); ?></span>
