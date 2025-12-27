@@ -30,6 +30,7 @@ switch ($routeParser->ResourcePath()) {
         if (array_key_exists(2, $uriparts)) {
             $movie_id = explode("/", $_SERVER['REQUEST_URI'])[2];
             $genre_id = explode("/", $_SERVER['REQUEST_URI'])[2];
+            $collection_id = explode("/", $_SERVER['REQUEST_URI'])[2];
         }
         break;
 }

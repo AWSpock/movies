@@ -201,12 +201,13 @@ ready(convertAllFields);
 //
 
 var currentUrl = window.location.pathname;
-var account_id = -1;
-var receipt_id = -1;
-var store_id = null;
+var movie_id = -1;
+var genre_id = -1;
+var collection_id = -1;
 
 if (currentUrl.split("/")[2]) movie_id = currentUrl.split("/")[2];
 if (currentUrl.split("/")[2]) genre_id = currentUrl.split("/")[2];
+if (currentUrl.split("/")[2]) collection_id = currentUrl.split("/")[2];
 
 //
 

@@ -17,6 +17,7 @@ class Movie
 
     protected $genres = [];
     protected $movie_files = [];
+    protected $collections = [];
 
     public function __construct($rec = null)
     {
@@ -38,13 +39,13 @@ class Movie
         }
     }
 
-    // public static function fromPost($post)
-    // {
-    //     $rec1['id'] = !empty($post['address_id']) ? $post['address_id'] : -1;
-    //     $rec1['street'] = $post['address_street'];
-    //     $new = new static($rec1);
-    //     return $new;
-    // }
+    public static function fromPost($post)
+    {
+        $rec1['id'] = !empty($post['movie_id']) ? $post['movie_id'] : -1;
+        $rec1['order_title'] = $post['movie_order_title'];
+        $new = new static($rec1);
+        return $new;
+    }
 
     public static function fromDatabase($db)
     {
@@ -87,6 +88,10 @@ class Movie
     public function set_id($val)
     {
         $this->id = $val;
+    }
+    public function set_order_title($val)
+    {
+        $this->order_title = $val;
     }
 
     public function id()
@@ -147,6 +152,10 @@ class Movie
     {
         return $this->movie_files;
     }
+    public function collections()
+    {
+        return $this->collections;
+    }
 
     public function toString($pretty = false)
     {
@@ -170,6 +179,9 @@ class Movie
 
         if (count($this->movie_files) > 0)
             $obj->movie_files = $this->movie_files();
+
+        if (count($this->collections) > 0)
+            $obj->collections = $this->collections();
 
         if ($pretty === true)
             return json_encode(get_object_vars($obj), JSON_PRETTY_PRINT);
@@ -207,5 +219,21 @@ class Movie
     public function addMovieFile(Movie_File $movie_file)
     {
         array_push($this->movie_files, $movie_file);
+    }
+
+    public function addCollections($collections = [])
+    {
+        foreach ($collections as $collection) {
+            if ($collection instanceof Collection) {
+                array_push($this->collections, $collection);
+            } else {
+                throw new Exception("Invalid Object in Array of Collection");
+            }
+        }
+    }
+
+    public function addCollection(Collection $collection)
+    {
+        array_push($this->collections, $collection);
     }
 }

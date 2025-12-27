@@ -25,6 +25,7 @@ switch ($routeParser->ResourcePath()) {
         if (array_key_exists(3, $uriparts)) {
             $movie_id = explode("/", $_SERVER['REQUEST_URI'])[3];
             $genre_id = explode("/", $_SERVER['REQUEST_URI'])[3];
+            $collection_id = explode("/", $_SERVER['REQUEST_URI'])[3];
         }
         break;
 }

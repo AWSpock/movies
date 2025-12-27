@@ -1,0 +1,45 @@
+<div class="header">
+    <h1>Add Collection</h1>
+</div>
+
+<nav class="breadcrumbs">
+    <ul>
+        <li><a href="/">Movies</a></li>
+        <li><a href="/collection">Collections</a></li>
+        <li>Add Collection</li>
+    </ul>
+</nav>
+
+<div class="content">
+    <form method="post" action="" id="frm" class="form-group full-form">
+        <div class="group-one">
+            <div class="input-group">
+                <label for="collection.name" class="form-control">Name</label>
+                <input type="text" id="collection.name" name="collection.name" class="form-control" required="required" value="<?php echo htmlentities($recCollection->name()); ?>" />
+            </div>
+        </div>
+
+        <div class="group-two">
+            <div class="input-group">
+                <label class="form-control">Movies</label>
+                <div class="movies">
+                    <?php
+                    foreach ($movies as $movie) {
+                    ?>
+                        <div class="movie">
+                            <input type="checkbox" id="collection.movie.<?php echo htmlentities($movie->id()); ?>" name="collection.movie[]" value="<?php echo htmlentities($movie->id()); ?>" <?php echo (isChecked($recCollection->movies(), $movie->id())) ? "checked='checked'" : "" ?> />
+                            <label for="collection.movie.<?php echo htmlentities($movie->id()); ?>"><?php echo htmlentities($movie->title()); ?> [<span data-dateonlyformatter><?php echo htmlentities($movie->release_date()); ?></span>]</label>
+                        </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="button primary"><i class="fa-solid fa-save"></i>Save</button>
+            <a href="/collection" class="button secondary"><i class="fa-solid fa-ban"></i>Cancel</a>
+        </div>
+    </form>
+</div>

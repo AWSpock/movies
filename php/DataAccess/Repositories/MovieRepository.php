@@ -8,9 +8,8 @@ class MovieRepository
 
     private $records = [];
     private $recordsGenre = [];
-    private $recordsMap = [];
+    private $recordsCollection = [];
     private $loaded = false;
-    private $loadedMap = false;
 
     public $actionDataMessage;
 
@@ -101,6 +100,36 @@ class MovieRepository
             }
         }
         return $this->recordsGenre[$id];
+    }
+
+    public function getMoviesForCollection($id)
+    {
+        if (!array_key_exists($id, $this->recordsCollection)) {
+            $sql = "
+                SELECT a.`id`, a.`created`, a.`updated`, a.`title`, a.`order_title`, a.`overview`, a.`release_date`, a.`poster_path`, a.`poster_shard1`, a.`poster_shard2`, a.`poster_file_type`, a.`backdrop_path`
+                FROM movie a
+                WHERE a.`id` IN (
+                    SELECT `movie_id`
+                    FROM movie_collection
+                    WHERE `collection_id` = ?
+                )
+                ORDER BY a.`order_title`, a.`release_date`
+            ";
+
+            $result = $this->db->query($sql, [
+                $id,
+            ], "i");
+
+            if ($result) {
+                $this->recordsCollection[$id] = [];
+                foreach ($result->fetch_all(MYSQLI_ASSOC) as $rec) {
+                    $this->recordsCollection[$id][$rec['id']] = Movie::fromDatabase($rec);
+                }
+            } else {
+                $this->recordsCollection[$id] = null;
+            }
+        }
+        return $this->recordsCollection[$id];
     }
 
     public function insertRecord(Movie $rec)
@@ -200,50 +229,53 @@ class MovieRepository
         return 0;
     }
 
-    // public function updateRecord(Movie $rec)
-    // {
-    //     $this->actionDataMessage = "Failed to update Address";
+    public function updateRecord(Movie $rec)
+    {
+        $this->actionDataMessage = "Failed to update Movie";
 
-    //     if (empty($rec->title())) {
-    //         $this->actionDataMessage = "Title is required to update Movie";
-    //         return 0;
-    //     }
+        if (empty($rec->title())) {
+            $this->actionDataMessage = "Title is required to update Movie";
+            return 0;
+        }
 
-    //     // $this->db->beginTransaction();
+        // $this->db->beginTransaction();
 
-    //     $sql = "
-    //         UPDATE movie 
-    //         SET `title` = ?,
-    //             `order_title` = ?,
-    //             `overview` = ?,
-    //             `release_date` = ?,
-    //             `poster_path` = ?,
-    //             `poster_shard1` = ?,
-    //             `poster_shard2` = ?,
+        $sql = "
+            UPDATE movie 
+            SET `title` = ?,
+                `order_title` = ?,
+                `overview` = ?,
+                `release_date` = ?,
+                `poster_path` = ?,
+                `poster_shard1` = ?,
+                `poster_shard2` = ?
+            WHERE `id` = ? 
+        ";
 
-    //         WHERE `id` = ? 
-    //         AND `userid` = ?
-    //     ";
+        $result = $this->db->query($sql, [
+            $rec->title(),
+            $rec->order_title(),
+            $rec->overview(),
+            $rec->release_date(),
+            $rec->poster_path(),
+            $rec->poster_shard1(),
+            $rec->poster_shard2(),
+            $rec->id()
+        ], "sssssssi");
 
-    //     $result = $this->db->query($sql, [
-    //         $rec->street(),
-    //         $rec->id(),
-    //         $this->userid
-    //     ], "sii");
+        if ($result !== false) {
+            if ($result !== 1) {
+                $this->actionDataMessage = "Movie Unchanged";
+                return 2;
+            }
+            $this->actionDataMessage = "Movie Updated";
+            // $this->db->commit();
+            return 1;
+        }
 
-    //     if ($result !== false) {
-    //         if ($result !== 1) {
-    //             $this->actionDataMessage = "Address Unchanged";
-    //             return 2;
-    //         }
-    //         $this->actionDataMessage = "Address Updated";
-    //         // $this->db->commit();
-    //         return 1;
-    //     }
-
-    //     // $this->db->rollback();
-    //     return false;
-    // }
+        // $this->db->rollback();
+        return false;
+    }
 
     // public function deleteRecord(Address $rec)
     // {

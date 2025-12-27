@@ -8,9 +8,7 @@ class GenreRepository
 
     private $records = [];
     private $recordsMovie = [];
-    private $recordsMap = [];
     private $loaded = false;
-    private $loadedMap = false;
 
     public $actionDataMessage;
 
@@ -70,7 +68,7 @@ class GenreRepository
 
     public function getGenresForMovie($id)
     {
-        if (!array_key_exists($id, $this->records)) {
+        if (!array_key_exists($id, $this->recordsMovie)) {
             $sql = "
                 SELECT a.`id`, a.`name`, a.`created`
                 FROM genre a
@@ -84,15 +82,15 @@ class GenreRepository
             ], "i");
 
             if ($result) {
-                $this->records[$id] = [];
+                $this->recordsMovie[$id] = [];
                 foreach ($result->fetch_all(MYSQLI_ASSOC) as $rec) {
-                    array_push($this->records[$id], Genre::fromDatabase($rec));
+                    array_push($this->recordsMovie[$id], Genre::fromDatabase($rec));
                 }
             } else {
-                $this->records[$id] = null;
+                $this->recordsMovie[$id] = null;
             }
         }
-        return $this->records[$id];
+        return $this->recordsMovie[$id];
     }
 
     public function insertRecord(Genre $rec)

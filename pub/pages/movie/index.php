@@ -10,6 +10,12 @@
 </nav>
 
 <div class="content">
+    <div class="row">
+        <div class="options">
+            <a href="/movie/<?php echo htmlentities($recMovie->id()); ?>/edit" class="button secondary"><i class="fa-solid fa-pencil"></i>Edit Movie</a>
+        </div>
+    </div>
+
     <div class="movie-info">
         <div class="poster">
             <?php

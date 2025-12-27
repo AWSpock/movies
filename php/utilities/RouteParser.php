@@ -46,23 +46,57 @@ class RouteParser
             $this->resourcePath = "/genre/index";
             return;
         }
+        if (preg_match("~^/collection$~", $this->request)) {
+            $this->resourcePath = "/collection/index";
+            return;
+        }
 
         /* details */
-        if (preg_match("~^/movie/(\d+)$~", $this->request)) {
-            $this->resourcePath = "/movie";
+        if (preg_match("~^/movie/(\d+)/summary$~", $this->request)) {
+            $this->resourcePath = "/movie/index";
             return;
         }
         if (preg_match("~^/genre/(\d+)$~", $this->request)) {
             $this->resourcePath = "/genre/movie";
             return;
         }
-        
+        if (preg_match("~^/collection/(\d+)$~", $this->request)) {
+            $this->resourcePath = "/collection/movie";
+            return;
+        }
+
         if (preg_match("~^/movie-map/(\d+)/tmdb$~", $this->request)) {
             $this->resourcePath = "/movie-map/tmdb";
             return;
         }
         if (preg_match("~^/movie-map/(\d+)/movie$~", $this->request)) {
             $this->resourcePath = "/movie-map/movie";
+            return;
+        }
+
+        /* create */
+        if (preg_match("~^/collection/create$~", $this->request)) {
+            $this->resourcePath = "/collection/create";
+            return;
+        }
+
+        /* edit */
+        if (preg_match("~^/movie/(\d+)/edit$~", $this->request)) {
+            $this->resourcePath = "/movie/edit";
+            return;
+        }
+        if (preg_match("~^/collection/(\d+)/edit$~", $this->request)) {
+            $this->resourcePath = "/collection/edit";
+            return;
+        }
+
+        /* delete */
+        if (preg_match("~^/movie/(\d+)/delete$~", $this->request)) {
+            $this->resourcePath = "/movie/delete";
+            return;
+        }
+        if (preg_match("~^/collection/(\d+)/delete$~", $this->request)) {
+            $this->resourcePath = "/collection/delete";
             return;
         }
 
@@ -96,6 +130,10 @@ class RouteParser
             $this->resourcePath = "/movie-genre";
             return;
         }
+        if (preg_match("~^/api/movie/(\d+)/collection$~", $this->request)) {
+            $this->resourcePath = "/movie-collection";
+            return;
+        }
 
         if (preg_match("~^/api/genre$~", $this->request)) {
             $this->resourcePath = "/genre";
@@ -107,6 +145,19 @@ class RouteParser
         }
         if (preg_match("~^/api/genre/(\d+)/movies$~", $this->request)) {
             $this->resourcePath = "/genre-movie";
+            return;
+        }
+
+        if (preg_match("~^/api/collection$~", $this->request)) {
+            $this->resourcePath = "/collection";
+            return;
+        }
+        if (preg_match("~^/api/collection/(\d+)$~", $this->request)) {
+            $this->resourcePath = "/collection";
+            return;
+        }
+        if (preg_match("~^/api/collection/(\d+)/movies$~", $this->request)) {
+            $this->resourcePath = "/collection-movie";
             return;
         }
 

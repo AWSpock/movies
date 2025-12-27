@@ -3,6 +3,7 @@ require_once(__DIR__ . "/Database.php");
 require_once(__DIR__ . "/Repositories/MovieRepository.php");
 require_once(__DIR__ . "/Repositories/Movie_FileRepository.php");
 require_once(__DIR__ . "/Repositories/GenreRepository.php");
+require_once(__DIR__ . "/Repositories/CollectionRepository.php");
 
 class DataAccess
 {
@@ -10,6 +11,7 @@ class DataAccess
     private $movieRepository = [];
     private $movie_FileRepository = [];
     private $genreRepository = [];
+    private $collectionRepository = [];
     private $movie_TMDBRepository = [];
 
     public function __construct(mysqli $db = null)
@@ -39,6 +41,14 @@ class DataAccess
             $this->genreRepository[0] = new GenreRepository($this->db);
         }
         return $this->genreRepository[0];
+    }
+
+    public function collections()
+    {
+        if (!array_key_exists(0, $this->collectionRepository)) {
+            $this->collectionRepository[0] = new CollectionRepository($this->db);
+        }
+        return $this->collectionRepository[0];
     }
 
     //

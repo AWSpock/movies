@@ -1,3 +1,30 @@
+button.link {
+  padding: 0.5rem 0.75rem;
+}
+
+.options {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-flow: column;
+  column-gap: 1rem;
+  place-content: start;
+}
+
+.options a:not(.button) {
+  padding: 1rem;
+}
+
+.options > * {
+  text-align: center;
+  display: grid;
+}
+
+.options > * > i {
+  place-self: center;
+}
+
 .movie-info {
   grid-column: 1 / 13;
   display: grid;

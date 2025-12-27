@@ -17,7 +17,7 @@
 
 
 <template id="template">
-	<a class="movie-info" href="/movie/MOVIE_ID" target="_blank">
+	<a class="movie-info" href="/movie/MOVIE_ID/summary" target="_blank">
 		<div class="poster">
 			<img src="/api/movie/MOVIE_ID/poster" data-id="poster" loading="lazy" />
 		</div>
