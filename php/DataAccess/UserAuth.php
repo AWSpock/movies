@@ -224,7 +224,6 @@ class UserAuth
                 return true;
             }
         }
-
         $this->db->rollback();
         return false;
     }
