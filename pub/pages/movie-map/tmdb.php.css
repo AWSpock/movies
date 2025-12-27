@@ -1,0 +1,72 @@
+.search-results {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 1rem;
+}
+
+.search-results .search-result {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "input image"
+    "input info";
+  column-gap: 1rem;
+  row-gap: 1rem;
+  padding: 1rem;
+}
+
+.search-results .search-result:hover {
+  cursor: pointer;
+  background-color: var(--secondary-background-color);
+}
+
+.search-result > input[type="radio"] {
+  grid-area: input;
+}
+
+.search-result > img {
+  grid-area: image;
+}
+
+.search-result .info {
+  grid-area: info;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "title year"
+    "overview overview";
+  grid-auto-rows: min-content;
+  column-gap: 1rem;
+  row-gap: 1rem;
+  padding: 1rem;
+}
+.search-result > .info > .title {
+  grid-area: title;
+}
+.search-result > .info > .year {
+  grid-area: year;
+}
+.search-result > .info > .overview {
+  grid-area: overview;
+}
+
+div.label {
+  display: block;
+  padding-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+@media only screen and (min-width: 768px) {
+}
+@media only screen and (min-width: 1024px) {
+  .search-results .search-result {
+    grid-template-columns: auto 200px 1fr 1fr;
+    grid-template-areas:
+      "input image info info"
+      "input image info info";
+  }
+}
+@media only screen and (min-width: 1280px) {
+}
+@media only screen and (min-width: 1580px) {
+}

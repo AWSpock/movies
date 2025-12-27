@@ -1,0 +1,40 @@
+.data-table-row {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    "title title title year"
+    "create_from create_from create_from create_from"
+    "created created updated updated";
+}
+
+.data-table-cell[data-id="title"] {
+  grid-area: title;
+}
+.data-table-cell[data-id="year"] {
+  grid-area: year;
+}
+.data-table-cell[data-id="created"] {
+  grid-area: created;
+}
+.data-table-cell[data-id="updated"] {
+  grid-area: updated;
+}
+
+.data-table-cell[data-id="create_from"] {
+  grid-area: create_from;
+}
+
+@media only screen and (min-width: 768px) {
+}
+@media only screen and (min-width: 1024px) {
+  /* .data-table {
+    max-width: 1000px;
+  } */
+  .data-table-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: "title year create_from created updated";
+  }
+}
+@media only screen and (min-width: 1280px) {
+}
+@media only screen and (min-width: 1580px) {
+}
