@@ -49,7 +49,7 @@ if (!empty($_POST)) {
                     $success = true;
                     foreach ($details->genres as $genre) {
                         $g = Genre::fromTMDB($genre);
-                        $res3 = $movieData->mapGenre($movie, $g);
+                        $res3 = $movieData->mapGenre($movie, $g->id());
                         if ($res3 !== 1) {
                             $_SESSION['last_message_text'] = $movieData->actionDataMessage;
                             $_SESSION['last_message_type'] = "danger";

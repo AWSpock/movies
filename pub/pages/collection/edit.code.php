@@ -32,7 +32,7 @@ if (!empty($_POST)) {
             }
             if ($add) {
                 $added = true;
-                if ($collectionData->mapMovie($movie, $recCollection) !== 1) {
+                if ($collectionData->mapMovie($recCollection, $movie) !== 1) {
                     $success = false;
                     $_SESSION['last_message_text'] = $collectionData->actionDataMessage;
                     break;
@@ -52,7 +52,7 @@ if (!empty($_POST)) {
                     }
                 }
                 if ($extra) {
-                    if ($collectionData->unmapMovies($_POST['collection_movie'], $recCollection) !== 1) {
+                    if ($collectionData->unmapMovies($recCollection, $_POST['collection_movie']) !== 1) {
                         $success = false;
                         $_SESSION['last_message_text'] = $collectionData->actionDataMessage;
                     } else {
@@ -78,7 +78,7 @@ if (!empty($_POST)) {
     $recCollection->addMovies($data->movies()->getMoviesForCollection($collection_id));
 }
 
-function isChecked($movies = [], $id)
+function isMovieChecked($movies = [], $id)
 {
     foreach ($movies as $movie) {
         if ($movie instanceof Movie) {

@@ -1,18 +1,19 @@
 .full-form {
   grid-column: 1 / 13;
   display: grid;
-  grid-template-columns: 1fr;
   column-gap: 1rem;
   row-gap: 1rem;
   grid-template-areas:
     "group1"
     "group2"
+    "group3"
     "buttons";
 }
 
-.movies {
+.collections,
+.genres {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   column-gap: 1rem;
   row-gap: 1rem;
 }
@@ -23,6 +24,10 @@
 
 .group-two {
   grid-area: group2;
+}
+
+.group-three {
+  grid-area: group3;
 }
 
 .button-group {
@@ -37,23 +42,31 @@
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
       "group1 empty"
-      "group2 group2"
+      "group2 group3"
       "buttons buttons";
   }
 }
 
 @media only screen and (min-width: 1280px) {
-  .full-form {
+  /* .full-form {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
       "group1 empty empty"
-      "group2 group2 group2"
+      "group2 group2 group3"
       "buttons buttons buttons";
-  }
-  .movies {
-    grid-template-columns: 1fr 1fr 1fr;
+  } */
+  .collections,
+  .genres {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
 @media only screen and (min-width: 1580px) {
+  .full-form {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+      "group1 empty empty empty"
+      "group2 group2 group3 group3"
+      "buttons buttons buttons buttons";
+  }
 }

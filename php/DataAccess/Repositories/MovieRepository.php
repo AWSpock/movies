@@ -169,66 +169,6 @@ class MovieRepository
         return 0;
     }
 
-    public function mapGenre(Movie $rec, Genre $genre)
-    {
-        $this->actionDataMessage = "Failed to map Movie to Genre";
-
-        if ($rec->id() < 0 || $genre->id() < 0) {
-            $this->actionDataMessage = "Missing IDs to map Movie to Genre";
-            return 0;
-        }
-
-        // $this->db->beginTransaction();
-
-        $sql = "
-            INSERT INTO movie_genre (`movie_id`,`genre_id`)
-            VALUES (?,?)
-        ";
-
-        $result = $this->db->query($sql, [
-            $rec->id(),
-            $genre->id()
-        ], "ii");
-
-        if ($result) {
-            $this->actionDataMessage = "Movie mapped to Genre";
-            // $this->db->commit();
-            return 1;
-        }
-        // $this->db->rollback();
-        return 0;
-    }
-
-    public function mapTMDB(Movie $rec, $tmdb_id = -1)
-    {
-        $this->actionDataMessage = "Failed to map Movie to Genre";
-
-        if ($rec->id() < 0 || $tmdb_id < 0) {
-            $this->actionDataMessage = "Missing IDs to map Movie to TMDB";
-            return 0;
-        }
-
-        // $this->db->beginTransaction();
-
-        $sql = "
-            INSERT INTO movie_tmdb (`movie_id`,`tmdb_id`)
-            VALUES (?,?)
-        ";
-
-        $result = $this->db->query($sql, [
-            $rec->id(),
-            $tmdb_id
-        ], "ii");
-
-        if ($result) {
-            $this->actionDataMessage = "Movie mapped to TMDB";
-            // $this->db->commit();
-            return 1;
-        }
-        // $this->db->rollback();
-        return 0;
-    }
-
     public function updateRecord(Movie $rec)
     {
         $this->actionDataMessage = "Failed to update Movie";
@@ -277,89 +217,200 @@ class MovieRepository
         return false;
     }
 
-    // public function deleteRecord(Address $rec)
-    // {
-    //     $this->actionDataMessage = "Failed to delete Address";
+    public function deleteRecord(Movie $rec)
+    {
+        $this->actionDataMessage = "Failed to delete Movie";
 
-    //     $this->db->beginTransaction();
+        $this->db->beginTransaction();
 
-    //     $sql = "
-    //         DELETE a, b, c, d, e
-    //         FROM address a
-    //             LEFT OUTER JOIN bill_type b ON a.`id` = b.`address_id`
-    //             LEFT OUTER JOIN address_favorite c ON a.`id` = c.`address_id`
-    //             LEFT OUTER JOIN address_share d ON a.`id` = d.`address_id`
-    //             LEFT OUTER JOIN bill e ON a.`id` = e.`address_id`
-    //         WHERE a.`id` = ? 
-    //         AND a.`userid` = ?
-    //     ";
+        $sql = "
+            DELETE a, b, c, d, e
+            FROM movie a
+                LEFT OUTER JOIN movie_genre b ON a.`id` = b.`movie_id`
+                LEFT OUTER JOIN movie_collection c ON a.`id` = c.`movie_id`
+                LEFT OUTER JOIN movie_tmdb d ON a.`id` = d.`movie_id`
+                LEFT OUTER JOIN movie_file e ON a.`id` = e.`movie_id`
+            WHERE a.`id` = ? 
+        ";
 
-    //     $result = $this->db->query($sql, [
-    //         $rec->id(),
-    //         $this->userid
-    //     ], "ii");
+        $result = $this->db->query($sql, [
+            $rec->id()
+        ], "i");
 
-    //     if (is_int($result) && $result > 0) {
-    //         $this->actionDataMessage = "Address Deleted";
-    //         $this->db->commit();
-    //         return 1;
-    //     }
-    //     $this->db->rollback();
-    //     return 0;
-    // }
+        if (is_int($result) && $result > 0) {
+            $this->actionDataMessage = "Movie Deleted";
+            $this->db->commit();
+            return 1;
+        }
+        $this->db->rollback();
+        return 0;
+    }
 
-    //
+    public function unmapGenres(Movie $movie, $genres)
+    {
+        $this->actionDataMessage = "Failed to unmap Movies from Genre";
 
-    // public function setFavorite($id)
-    // {
-    //     $this->actionDataMessage = "Failed to Add Favorite Address";
+        if (!isset($genres) || $movie->id() < 0) {
+            $this->actionDataMessage = "Missing IDs to unmap Genres from Movie";
+            return 0;
+        }
 
-    //     $this->db->beginTransaction();
+        // $this->db->beginTransaction();
 
-    //     $sql = "
-    //         INSERT INTO address_favorite (`address_id`, `userid`)
-    //         VALUES (?,?)
-    //     ";
+        $arr = [];
+        array_push($arr, $movie->id());
 
-    //     $result = $this->db->query($sql, [
-    //         $id,
-    //         $this->userid
-    //     ], "ii");
+        $qs = [];
+        $is = "i";
+        foreach ($genres as $genre) {
+            array_push($qs, "?");
+            $is .= "i";
+            array_push($arr, $genre);
+        }
 
-    //     if ($result === true) {
-    //         $this->actionDataMessage = "Added Favorite Address";
-    //         $this->db->commit();
-    //         return true;
-    //     }
+        $sql = "
+            DELETE FROM movie_genre
+            WHERE movie_id = ?
+                AND genre_id NOT IN (" . implode(",", $qs) . ")
+        ";
 
-    //     $this->db->rollback();
-    //     return false;
-    // }
+        $result = $this->db->query($sql, $arr, $is);
 
-    // public function removeFavorite($id)
-    // {
-    //     $this->actionDataMessage = "Failed to Remove Favorite Address";
+        if ($result) {
+            $this->actionDataMessage = "Genres unmapped from Movie";
+            // $this->db->commit();
+            return 1;
+        }
+        // $this->db->rollback();
+        return 0;
+    }
 
-    //     $this->db->beginTransaction();
+    public function mapGenre(Movie $rec, $genre_id = -1)
+    {
+        $this->actionDataMessage = "Failed to map Genre to Movie";
 
-    //     $sql = "
-    //         DELETE FROM address_favorite
-    //         WHERE `address_id` = ? 
-    //         AND `userid` = ?
-    //     ";
+        if ($rec->id() < 0 || $genre_id < 0) {
+            $this->actionDataMessage = "Missing IDs to map Genre to Movie";
+            return 0;
+        }
 
-    //     $result = $this->db->query($sql, [
-    //         $id,
-    //         $this->userid
-    //     ], "ii");
+        // $this->db->beginTransaction();
 
-    //     if (is_int($result) && $result > 0) {
-    //         $this->actionDataMessage = "Removed Favorite Address";
-    //         $this->db->commit();
-    //         return true;
-    //     }
+        $sql = "
+            INSERT INTO movie_genre (`movie_id`,`genre_id`)
+            VALUES (?,?)
+        ";
 
-    //     $this->db->rollback();
-    //     return false;
-    // }
+        $result = $this->db->query($sql, [
+            $rec->id(),
+            $genre_id
+        ], "ii");
+
+        if ($result) {
+            $this->actionDataMessage = "Genre mapped to Movie";
+            // $this->db->commit();
+            return 1;
+        }
+        // $this->db->rollback();
+        return 0;
+    }
+
+    public function unmapCollections(Movie $movie, $collections)
+    {
+        $this->actionDataMessage = "Failed to unmap Collections from Movie";
+
+        if (!isset($collections) || $movie->id() < 0) {
+            $this->actionDataMessage = "Missing IDs to unmap Collections from Movie";
+            return 0;
+        }
+
+        // $this->db->beginTransaction();
+
+        $arr = [];
+        array_push($arr, $movie->id());
+
+        $qs = [];
+        $is = "i";
+        foreach ($collections as $collection) {
+            array_push($qs, "?");
+            $is .= "i";
+            array_push($arr, $collection);
+        }
+
+        $sql = "
+            DELETE FROM movie_collection
+            WHERE movie_id = ?
+                AND collection_id NOT IN (" . implode(",", $qs) . ")
+        ";
+
+        $result = $this->db->query($sql, $arr, $is);
+
+        if ($result) {
+            $this->actionDataMessage = "Collections unmapped from Movie";
+            // $this->db->commit();
+            return 1;
+        }
+        // $this->db->rollback();
+        return 0;
+    }
+
+    public function mapCollection(Movie $rec, $collection_id = -1)
+    {
+        $this->actionDataMessage = "Failed to map Collection to Movie";
+
+        if ($rec->id() < 0 || $collection_id < 0) {
+            $this->actionDataMessage = "Missing IDs to map Collection to Movie";
+            return 0;
+        }
+
+        // $this->db->beginTransaction();
+
+        $sql = "
+            INSERT INTO movie_collection (`movie_id`,`collection_id`)
+            VALUES (?,?)
+        ";
+
+        $result = $this->db->query($sql, [
+            $rec->id(),
+            $collection_id
+        ], "ii");
+
+        if ($result) {
+            $this->actionDataMessage = "Collection mapped to Movie";
+            // $this->db->commit();
+            return 1;
+        }
+        // $this->db->rollback();
+        return 0;
+    }
+
+    public function mapTMDB(Movie $rec, $tmdb_id = -1)
+    {
+        $this->actionDataMessage = "Failed to map Movie to TMDB";
+
+        if ($rec->id() < 0 || $tmdb_id < 0) {
+            $this->actionDataMessage = "Missing IDs to map Movie to TMDB";
+            return 0;
+        }
+
+        // $this->db->beginTransaction();
+
+        $sql = "
+            INSERT INTO movie_tmdb (`movie_id`,`tmdb_id`)
+            VALUES (?,?)
+        ";
+
+        $result = $this->db->query($sql, [
+            $rec->id(),
+            $tmdb_id
+        ], "ii");
+
+        if ($result) {
+            $this->actionDataMessage = "Movie mapped to TMDB";
+            // $this->db->commit();
+            return 1;
+        }
+        // $this->db->rollback();
+        return 0;
+    }
 }

@@ -165,8 +165,9 @@ class CollectionRepository
         $this->db->beginTransaction();
 
         $sql = "
-            DELETE a
+            DELETE a, b
             FROM collection a
+                LEFT OUTER JOIN movie_collection b ON a.`id` = b.`collection_id`
             WHERE a.`id` = ? 
         ";
 
@@ -184,7 +185,7 @@ class CollectionRepository
     }
 
 
-    public function unmapMovies($movies, Collection $collection)
+    public function unmapMovies(Collection $collection, $movies)
     {
         $this->actionDataMessage = "Failed to unmap Movies from Collection";
 
@@ -215,7 +216,7 @@ class CollectionRepository
         $result = $this->db->query($sql, $arr, $is);
 
         if ($result) {
-            $this->actionDataMessage = "Movie unmapped from Collection";
+            $this->actionDataMessage = "Movies unmapped from Collection";
             // $this->db->commit();
             return 1;
         }
@@ -223,7 +224,7 @@ class CollectionRepository
         return 0;
     }
 
-    public function mapMovie($movie_id = -1, Collection $collection)
+    public function mapMovie(Collection $collection, $movie_id = -1)
     {
         $this->actionDataMessage = "Failed to map Movie to Collection";
 

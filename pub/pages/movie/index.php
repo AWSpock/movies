@@ -48,8 +48,20 @@
                     ?>
                 </ul>
             </div>
+            <div class="collections">
+                <h3>Collections</h3>
+                <ul>
+                    <?php
+                    foreach ($recMovie->collections() as $collection) {
+                    ?>
+                        <li><a href="/collection/<?php echo htmlentities($collection->id()); ?>" target="_blank"><?php echo htmlentities($collection->name()); ?></a></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
             <div class="file_name">
-                <span>File(s): </span>
+                <h3>File(s)</h3>
                 <ul>
                     <?php
                     foreach ($recMovie->movie_files() as $movie_file) {

@@ -27,7 +27,7 @@
                     foreach ($movies as $movie) {
                     ?>
                         <div class="movie">
-                            <input type="checkbox" id="collection.movie.<?php echo htmlentities($movie->id()); ?>" name="collection.movie[]" value="<?php echo htmlentities($movie->id()); ?>" <?php echo (isChecked($recCollection->movies(), $movie->id())) ? "checked='checked'" : "" ?> />
+                            <input type="checkbox" id="collection.movie.<?php echo htmlentities($movie->id()); ?>" name="collection.movie[]" value="<?php echo htmlentities($movie->id()); ?>" <?php echo (isMovieChecked($recCollection->movies(), $movie->id())) ? "checked='checked'" : "" ?> />
                             <label for="collection.movie.<?php echo htmlentities($movie->id()); ?>"><?php echo htmlentities($movie->title()); ?> [<span data-dateonlyformatter><?php echo htmlentities($movie->release_date()); ?></span>]</label>
                         </div>
                     <?php

@@ -8,6 +8,9 @@ if ($recMovie->id() < 0) {
     die();
 }
 
+$collections = [];
+$genres = [];
+
 //
 
 if (!empty($_POST)) {
@@ -17,12 +20,131 @@ if (!empty($_POST)) {
     $res = $movieData->updateRecord($recMovie);
     $_SESSION['last_message_text'] = $movieData->actionDataMessage;
     if ($res == 1 || $res == 2) {
-        $data->commit();
-        $_SESSION['last_message_type'] = "success";
-        header('Location: /movie/' . $recMovie->id() . '/summary');
-        die();
+        $success = true;
+        $addedCollection = false;
+        $addedGenre = false;
+
+        // collections
+        $recMovie->addCollections($data->collections()->getCollectionsForMovie($movie_id));
+        foreach ($_POST['movie_collection'] as $collection) {
+            $add = true;
+            foreach ($recMovie->collections() as $c) {
+                if ($c->id() == $collection) {
+                    $add = false;
+                    break;
+                }
+            }
+            if ($add) {
+                $addedCollection = true;
+                if ($movieData->mapCollection($recMovie, $collection) !== 1) {
+                    $success = false;
+                    $_SESSION['last_message_text'] = $movieData->actionDataMessage;
+                    break;
+                }
+            }
+        }
+        if ($addedCollection) {
+            $_SESSION['last_message_text'] .= " + Added Collections";
+        }
+        if ($success) {
+            foreach ($recMovie->collections() as $c) {
+                $extra = true;
+                foreach ($_POST['movie_collection'] as $collection) {
+                    if ($c->id() == $collection) {
+                        $extra = false;
+                        break;
+                    }
+                }
+                if ($extra) {
+                    if ($movieData->unmapCollections($recMovie, $_POST['movie_collection']) !== 1) {
+                        $success = false;
+                        $_SESSION['last_message_text'] = $movieData->actionDataMessage;
+                    } else {
+                        $_SESSION['last_message_text'] .= " + Removed Collections";
+                    }
+                    break;
+                }
+            }
+        }
+
+        // genres
+        $recMovie->addGenres($data->genres()->getGenresForMovie($movie_id));
+        foreach ($_POST['movie_genre'] as $genre) {
+            $add = true;
+            foreach ($recMovie->genres() as $g) {
+                if ($g->id() == $genre) {
+                    $add = false;
+                    break;
+                }
+            }
+            if ($add) {
+                $addedGenre = true;
+                if ($movieData->mapGenre($recMovie, $genre) !== 1) {
+                    $success = false;
+                    $_SESSION['last_message_text'] = $movieData->actionDataMessage;
+                    break;
+                }
+            }
+        }
+        if ($addedGenre) {
+            $_SESSION['last_message_text'] .= " + Added Genres";
+        }
+        if ($success) {
+            foreach ($recMovie->genres() as $g) {
+                $extra = true;
+                foreach ($_POST['movie_genre'] as $genre) {
+                    if ($g->id() == $genre) {
+                        $extra = false;
+                        break;
+                    }
+                }
+                if ($extra) {
+                    if ($movieData->unmapGenres($recMovie, $_POST['movie_genre']) !== 1) {
+                        $success = false;
+                        $_SESSION['last_message_text'] = $movieData->actionDataMessage;
+                    } else {
+                        $_SESSION['last_message_text'] .= " + Removed Genres";
+                    }
+                    break;
+                }
+            }
+        }
+
+        if ($success) {
+            $data->commit();
+            $_SESSION['last_message_type'] = "success";
+            header('Location: /movie/' . $recMovie->id() . '/summary');
+            die();
+        }
     } else {
-        $data->rollback();
         $_SESSION['last_message_type'] = "danger";
     }
+    $data->rollback();
+} else {
+    $collections = $data->collections()->getRecords();
+    $genres = $data->genres()->getRecords();
+    $recMovie->addCollections($data->collections()->getCollectionsForMovie($movie_id));
+    $recMovie->addGenres($data->genres()->getGenresForMovie($movie_id));
+}
+
+function isCollectionChecked($collections = [], $id)
+{
+    foreach ($collections as $collection) {
+        if ($collection instanceof Collection) {
+            if ($collection->id() == $id)
+                return true;
+        }
+    }
+    return false;
+}
+
+function isGenreChecked($genres = [], $id)
+{
+    foreach ($genres as $genre) {
+        if ($genre instanceof Genre) {
+            if ($genre->id() == $id)
+                return true;
+        }
+    }
+    return false;
 }

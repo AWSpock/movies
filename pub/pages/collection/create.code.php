@@ -18,7 +18,7 @@ if (!empty($_POST)) {
         $success = true;
         $recCollection->set_id($collection_id);
         foreach ($_POST['collection_movie'] as $movie) {
-            if ($collectionData->mapMovie($movie, $recCollection) !== 1) {
+            if ($collectionData->mapMovie($recCollection, $movie) !== 1) {
                 $success = false;
                 $_SESSION['last_message_text'] = $collectionData->actionDataMessage;
                 break;
@@ -39,7 +39,7 @@ if (!empty($_POST)) {
     $movies = $data->movies()->getRecords();
 }
 
-function isChecked($movies = [], $id)
+function isMovieChecked($movies = [], $id)
 {
     foreach ($movies as $movie) {
         if ($movie instanceof Movie) {
