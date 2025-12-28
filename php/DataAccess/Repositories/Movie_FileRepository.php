@@ -22,7 +22,7 @@ class Movie_FileRepository
     {
         if (!array_key_exists($id, $this->records)) {
             $sql = "
-                SELECT a.`id`, a.`created`, a.`updated`, a.`file_name`, a.`title`, a.`year`, a.`notes`, a.`from_disk`, a.`file_size`, a.`bluray`, a.`quality`, a.`movie_id`
+                SELECT a.`id`, a.`created`, a.`updated`, a.`movie_id`, a.`title`, a.`year`, a.`notes`, a.`file_type`, a.`file_name`, a.`from_disk`, a.`quality_notes`, a.`file_size`, a.`bluray`, a.`quality`
                 FROM movie_file a
                 WHERE a.`id` = ? 
             ";
@@ -53,7 +53,7 @@ class Movie_FileRepository
         }
 
         $sql = "
-            SELECT a.`id`, a.`created`, a.`updated`, a.`file_name`, a.`title`, a.`year`, a.`notes`, a.`from_disk`, a.`file_size`, a.`bluray`, a.`quality`, a.`movie_id`
+            SELECT a.`id`, a.`created`, a.`updated`, a.`movie_id`, a.`title`, a.`year`, a.`notes`, a.`file_type`, a.`file_name`, a.`from_disk`, a.`quality_notes`, a.`file_size`, a.`bluray`, a.`quality`
                 FROM movie_file a
             WHERE a.`file_exists` = 1
             ORDER BY `title`
@@ -81,7 +81,7 @@ class Movie_FileRepository
         }
 
         $sql = "
-            SELECT a.`id`, a.`created`, a.`updated`, a.`file_name`, a.`title`, a.`year`, a.`notes`, a.`from_disk`, a.`file_size`, a.`bluray`, a.`quality`, a.`movie_id`
+            SELECT a.`id`, a.`created`, a.`updated`, a.`movie_id`, a.`title`, a.`year`, a.`notes`, a.`file_type`, a.`file_name`, a.`from_disk`, a.`quality_notes`, a.`file_size`, a.`bluray`, a.`quality`
                 FROM movie_file a
             WHERE a.`file_exists` = 1
                 AND a.`movie_id` IS NULL
@@ -102,7 +102,7 @@ class Movie_FileRepository
     {
         if (!array_key_exists($id, $this->records)) {
             $sql = "
-                SELECT a.`id`, a.`created`, a.`updated`, a.`file_name`, a.`title`, a.`year`, a.`notes`, a.`from_disk`, a.`file_size`, a.`bluray`, a.`quality`, a.`movie_id`
+                SELECT a.`id`, a.`created`, a.`updated`, a.`movie_id`, a.`title`, a.`year`, a.`notes`, a.`file_type`, a.`file_name`, a.`from_disk`, a.`quality_notes`, a.`file_size`, a.`bluray`, a.`quality`
                     FROM movie_file a
                 WHERE a.`file_exists` = 1
                     AND a.`movie_id` = ?
@@ -125,35 +125,44 @@ class Movie_FileRepository
         return $this->records[$id];
     }
 
-    // public function insertRecord(Address $rec)
-    // {
-    //     $this->actionDataMessage = "Failed to insert Address";
+    public function insertRecord(Movie_File $rec)
+    {
+        $this->actionDataMessage = "Failed to insert Movie_File";
 
-    //     if (empty($rec->street())) {
-    //         $this->actionDataMessage = "Street is required to insert Address";
-    //         return 0;
-    //     }
+        if (empty($rec->file_name())) {
+            $this->actionDataMessage = "File Name is required to insert Movie_File";
+            return 0;
+        }
 
-    //     $this->db->beginTransaction();
+        $this->db->beginTransaction();
 
-    //     $sql = "
-    //         INSERT INTO address (`street`,`userid`)
-    //         VALUES (?,?)
-    //     ";
+        $sql = "
+            INSERT INTO movie_file (`movie_id`,`title`,`year`,`notes`,`file_type`,`file_name`,`from_disk`,`quality_notes`,`bluray`,`quality`)
+            VALUES (?,?,?,?,?,?,?,?,?)
+        ";
 
-    //     $result = $this->db->query($sql, [
-    //         $rec->street(),
-    //         $this->userid
-    //     ], "si");
+        $result = $this->db->query($sql, [
+            $rec->movie_id(),
+            $rec->title(),
+            $rec->year(),
+            $rec->notes(),
+            $rec->file_type(),
+            $rec->file_name(),
+            $rec->from_disk(),
+            $rec->quality_notes(),
+            $rec->bluray(),
+            $rec->quality(),
+            $rec->id()
+        ], "isisssisis");
 
-    //     if (is_int($result) && $result > 0) {
-    //         $this->actionDataMessage = "Street Inserted";
-    //         $this->db->commit();
-    //         return $result;
-    //     }
-    //     $this->db->rollback();
-    //     return 0;
-    // }
+        if (is_int($result) && $result > 0) {
+            $this->actionDataMessage = "Movie_File Inserted";
+            $this->db->commit();
+            return $result;
+        }
+        $this->db->rollback();
+        return 0;
+    }
 
     public function updateRecord(Movie_File $rec)
     {
@@ -172,9 +181,10 @@ class Movie_FileRepository
                 `title` = ?,
                 `year` = ?,
                 `notes` = ?,
+                `file_type` = ?,
                 `file_name` = ?,
                 `from_disk` = ?,
-                `file_size` = ?,
+                `quality_notes` = ?,
                 `bluray` = ?,
                 `quality` = ?
             WHERE `id` = ? 
@@ -185,13 +195,14 @@ class Movie_FileRepository
             $rec->title(),
             $rec->year(),
             $rec->notes(),
+            $rec->file_type(),
             $rec->file_name(),
             $rec->from_disk(),
-            $rec->file_size(),
+            $rec->quality_notes(),
             $rec->bluray(),
             $rec->quality(),
             $rec->id()
-        ], "isissiiisi");
+        ], "isisssisisi");
 
         if ($result !== false) {
             if ($result !== 1) {
@@ -207,89 +218,28 @@ class Movie_FileRepository
         return false;
     }
 
-    // public function deleteRecord(Address $rec)
-    // {
-    //     $this->actionDataMessage = "Failed to delete Address";
+    public function deleteRecord(Movie_File $rec)
+    {
+        $this->actionDataMessage = "Failed to delete Movie_File";
 
-    //     $this->db->beginTransaction();
+        $this->db->beginTransaction();
 
-    //     $sql = "
-    //         DELETE a, b, c, d, e
-    //         FROM address a
-    //             LEFT OUTER JOIN bill_type b ON a.`id` = b.`address_id`
-    //             LEFT OUTER JOIN address_favorite c ON a.`id` = c.`address_id`
-    //             LEFT OUTER JOIN address_share d ON a.`id` = d.`address_id`
-    //             LEFT OUTER JOIN bill e ON a.`id` = e.`address_id`
-    //         WHERE a.`id` = ? 
-    //         AND a.`userid` = ?
-    //     ";
+        $sql = "
+            DELETE a
+            FROM movie_file a
+            WHERE a.`id` = ? 
+        ";
 
-    //     $result = $this->db->query($sql, [
-    //         $rec->id(),
-    //         $this->userid
-    //     ], "ii");
+        $result = $this->db->query($sql, [
+            $rec->id()
+        ], "i");
 
-    //     if (is_int($result) && $result > 0) {
-    //         $this->actionDataMessage = "Address Deleted";
-    //         $this->db->commit();
-    //         return 1;
-    //     }
-    //     $this->db->rollback();
-    //     return 0;
-    // }
-
-    //
-
-    // public function setFavorite($id)
-    // {
-    //     $this->actionDataMessage = "Failed to Add Favorite Address";
-
-    //     $this->db->beginTransaction();
-
-    //     $sql = "
-    //         INSERT INTO address_favorite (`address_id`, `userid`)
-    //         VALUES (?,?)
-    //     ";
-
-    //     $result = $this->db->query($sql, [
-    //         $id,
-    //         $this->userid
-    //     ], "ii");
-
-    //     if ($result === true) {
-    //         $this->actionDataMessage = "Added Favorite Address";
-    //         $this->db->commit();
-    //         return true;
-    //     }
-
-    //     $this->db->rollback();
-    //     return false;
-    // }
-
-    // public function removeFavorite($id)
-    // {
-    //     $this->actionDataMessage = "Failed to Remove Favorite Address";
-
-    //     $this->db->beginTransaction();
-
-    //     $sql = "
-    //         DELETE FROM address_favorite
-    //         WHERE `address_id` = ? 
-    //         AND `userid` = ?
-    //     ";
-
-    //     $result = $this->db->query($sql, [
-    //         $id,
-    //         $this->userid
-    //     ], "ii");
-
-    //     if (is_int($result) && $result > 0) {
-    //         $this->actionDataMessage = "Removed Favorite Address";
-    //         $this->db->commit();
-    //         return true;
-    //     }
-
-    //     $this->db->rollback();
-    //     return false;
-    // }
+        if (is_int($result) && $result > 0) {
+            $this->actionDataMessage = "Movie_File Deleted";
+            $this->db->commit();
+            return 1;
+        }
+        $this->db->rollback();
+        return 0;
+    }
 }

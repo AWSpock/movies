@@ -1,0 +1,39 @@
+.data-table-row {
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "file_name file_name"
+    "movie quality"
+    "from_disk bluray";
+  column-gap: 1rem;
+  row-gap: 1rem;
+  word-break: break-word;
+}
+
+.data-table-cell[data-id="file_name"] {
+  grid-area: file_name;
+}
+.data-table-cell[data-id="movie"] {
+  grid-area: movie;
+}
+.data-table-cell[data-id="quality"] {
+  grid-area: quality;
+}
+.data-table-cell[data-id="from_disk"] {
+  grid-area: from_disk;
+}
+.data-table-cell[data-id="bluray"] {
+  grid-area: bluray;
+}
+
+@media only screen and (min-width: 768px) {
+}
+@media only screen and (min-width: 1024px) {
+  .data-table-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: "file_name movie quality from_disk bluray";
+  }
+}
+@media only screen and (min-width: 1280px) {
+}
+@media only screen and (min-width: 1580px) {
+}

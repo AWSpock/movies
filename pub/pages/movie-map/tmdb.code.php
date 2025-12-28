@@ -58,7 +58,7 @@ if (!empty($_POST)) {
                     }
                     if ($success) {
                         $data->commit();
-                        header('Location: /movie-map');
+                        header('Location: /movie/' . $movie->id() . "/summary");
                         die();
                     }
                 }

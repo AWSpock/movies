@@ -1,0 +1,51 @@
+.full-form {
+  grid-column: 1 / 13;
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 1rem;
+  row-gap: 1rem;
+  grid-template-areas:
+    "group1"
+    "group2"
+    "buttons"
+    "dates";
+}
+
+.movies {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
+  row-gap: 1rem;
+}
+
+.group-one {
+  grid-area: group1;
+}
+.group-two {
+  grid-area: group2;
+}
+
+.button-group {
+  grid-area: buttons;
+}
+.dates {
+  grid-area: dates;
+}
+
+@media only screen and (min-width: 768px) {
+}
+
+@media only screen and (min-width: 1024px) {
+  .full-form {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "group1 group2"
+      "buttons dates";
+  }
+}
+
+@media only screen and (min-width: 1280px) {
+}
+
+@media only screen and (min-width: 1580px) {
+}

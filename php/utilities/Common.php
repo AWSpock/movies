@@ -57,3 +57,11 @@ function FormatMoney($val)
     $formatter_us = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
     return $formatter_us->formatCurrency($val, 'USD') . PHP_EOL;
 }
+
+function readableBytes($bytes) {
+    $i = floor(log($bytes) / log(1024));
+    $sizes = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+    // Use sprintf for formatting the number to two decimal places
+    $formattedSize = sprintf('%.02F', $bytes / pow(1024, $i));
+    return $formattedSize * 1 . ' ' . $sizes[$i]; // Multiplies by 1 to remove trailing zeros from sprintf where appropriate
+}
