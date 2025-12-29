@@ -84,7 +84,10 @@ class Movie_FileRepository
             SELECT a.`id`, a.`created`, a.`updated`, a.`movie_id`, a.`title`, a.`year`, a.`notes`, a.`file_type`, a.`file_name`, a.`from_disk`, a.`quality_notes`, a.`file_size`, a.`bluray`, a.`quality`
                 FROM movie_file a
             WHERE a.`file_exists` = 1
-                AND a.`movie_id` IS NULL
+                AND (
+                    a.`movie_id` IS NULL
+                    OR a.`movie_id` = ''
+                )
             ORDER BY `title`
         ";
 
