@@ -66,7 +66,7 @@
                     <?php
                     foreach ($recMovie->movie_files() as $movie_file) {
                     ?>
-                        <li><span><?php echo htmlentities($movie_file->file_name()); ?></span></li>
+                        <li><span><a href="/movie-file/<?php echo htmlentities($movie_file->id()); ?>/edit" target="_blank"><?php echo htmlentities($movie_file->file_name()); ?></a></span></li>
                     <?php
                     }
                     ?>
