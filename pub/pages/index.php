@@ -10,9 +10,14 @@
 
 <div class="content">
 	<div class="row">
-		<p>Record Count: <span id="data-table-count">?</span></p>
+		<h2>Recent Movies</h2>
+		<div class="recent movies" id="recent-movies"></div>
 	</div>
-	<div class="movies" id="movies"></div>
+	<div class="row">
+		<p>Record Count: <span id="data-table-count">?</span></p>
+		<h2>All Movies</h2>
+		<div class="movies" id="movies"></div>
+	</div>
 </div>
 
 

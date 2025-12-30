@@ -12,6 +12,13 @@
   column-gap: 1rem;
 }
 
+.movies.recent {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 1rem;
+}
+
 .movie-info {
   display: grid;
   grid-template-areas:
@@ -81,6 +88,9 @@
   .movies {
     grid-template-columns: 1fr 1fr 1fr;
   }
+  .movies.recent .movie-info {
+    min-width: 250px;
+  }
 }
 @media only screen and (min-width: 1280px) {
   .movies {
@@ -90,5 +100,8 @@
 @media only screen and (min-width: 1580px) {
   .movies {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+  .movies.recent .movie-info {
+    min-width: 250px;
   }
 }

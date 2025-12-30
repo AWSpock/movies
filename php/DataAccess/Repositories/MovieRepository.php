@@ -9,6 +9,7 @@ class MovieRepository
     private $records = [];
     private $recordsGenre = [];
     private $recordsCollection = [];
+    private $recordsRecent = [];
     private $loaded = false;
 
     public $actionDataMessage;
@@ -130,6 +131,34 @@ class MovieRepository
             }
         }
         return $this->recordsCollection[$id];
+    }
+
+    public function getMoviesRecentlyViewedByUser($userid)
+    {
+        if (!array_key_exists($userid, $this->recordsCollection)) {
+            $sql = "
+                SELECT b.`id` AS bid, a.`id`, a.`created`, a.`updated`, a.`title`, a.`order_title`, a.`overview`, a.`release_date`, a.`poster_path`, a.`poster_shard1`, a.`poster_shard2`, a.`poster_file_type`, a.`backdrop_path`
+                FROM movie a
+                    INNER JOIN movie_views b ON a.`id` = b.`movie_id`
+                WHERE b.`userid` = ?
+                    AND b.`created` > DATE_SUB(NOW(), INTERVAL 2 MONTH)
+                ORDER BY b.`created` DESC, a.`order_title`, a.`release_date`
+            ";
+
+            $result = $this->db->query($sql, [
+                $userid,
+            ], "i");
+
+            if ($result) {
+                $this->recordsRecent[$userid] = [];
+                foreach ($result->fetch_all(MYSQLI_ASSOC) as $rec) {
+                    $this->recordsCollection[$userid][$rec['bid']] = Movie::fromDatabase($rec);
+                }
+            } else {
+                $this->recordsCollection[$userid] = null;
+            }
+        }
+        return $this->recordsCollection[$userid];
     }
 
     public function insertRecord(Movie $rec)

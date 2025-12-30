@@ -19,6 +19,8 @@ class Movie
     protected $movie_files = [];
     protected $collections = [];
 
+    protected $user_view_count = null;
+
     public function __construct($rec = null)
     {
         $this->id = -1;
@@ -156,6 +158,10 @@ class Movie
     {
         return $this->collections;
     }
+    public function user_view_count()
+    {
+        return $this->user_view_count !== null ? intval($this->user_view_count) : null;
+    }
 
     public function toString($pretty = false)
     {
@@ -182,6 +188,9 @@ class Movie
 
         if (count($this->collections) > 0)
             $obj->collections = $this->collections();
+
+        if ($this->user_view_count !== null)
+            $obj->user_view_count = $this->user_view_count();
 
         if ($pretty === true)
             return json_encode(get_object_vars($obj), JSON_PRETTY_PRINT);
@@ -235,5 +244,10 @@ class Movie
     public function addCollection(Collection $collection)
     {
         array_push($this->collections, $collection);
+    }
+
+    public function addUserViewCount($count)
+    {
+        $this->user_view_count = $count;
     }
 }

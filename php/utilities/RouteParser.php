@@ -150,6 +150,10 @@ class RouteParser
             $this->resourcePath = "/movie-collection";
             return;
         }
+        if (preg_match("~^/api/my-recent-movie$~", $this->request)) {
+            $this->resourcePath = "/movie-recent-user";
+            return;
+        }
 
         if (preg_match("~^/api/genre$~", $this->request)) {
             $this->resourcePath = "/genre";

@@ -19,6 +19,10 @@
             <?php
             }
             ?>
+            <form method="post" action="" id="frm" class="inline">
+                <div>View Count: <span data-numberformatter><?php echo $recMovie->user_view_count(); ?></span></div>
+                <button type="submit" name="movie.view_count" value="Yes" class="link secondary" title="Add View Count"><i class="fa-regular fa-circle-up"></i>Add View Count</button>
+            </form>
         </div>
     </div>
 
