@@ -4,6 +4,8 @@ require_once(__DIR__ . "/Repositories/MovieRepository.php");
 require_once(__DIR__ . "/Repositories/Movie_FileRepository.php");
 require_once(__DIR__ . "/Repositories/GenreRepository.php");
 require_once(__DIR__ . "/Repositories/CollectionRepository.php");
+require_once(__DIR__ . "/Repositories/Movie_ViewsRepository.php");
+require_once(__DIR__ . "/Repositories/User_RoleRepository.php");
 
 class DataAccess
 {
@@ -12,7 +14,8 @@ class DataAccess
     private $movie_FileRepository = [];
     private $genreRepository = [];
     private $collectionRepository = [];
-    private $movie_TMDBRepository = [];
+    private $movie_ViewsRepository = [];
+    private $user_RoleRepository = [];
 
     public function __construct(mysqli $db = null)
     {
@@ -49,6 +52,22 @@ class DataAccess
             $this->collectionRepository[0] = new CollectionRepository($this->db);
         }
         return $this->collectionRepository[0];
+    }
+
+    public function movie_views($userid)
+    {
+        if (!array_key_exists($userid, $this->movie_ViewsRepository)) {
+            $this->movie_ViewsRepository[$userid] = new Movie_ViewsRepository($this->db, $userid);
+        }
+        return $this->movie_ViewsRepository[$userid];
+    }
+
+    public function user_roles($userid)
+    {
+        if (!array_key_exists($userid, $this->user_RoleRepository)) {
+            $this->user_RoleRepository[$userid] = new User_RoleRepository($this->db, $userid);
+        }
+        return $this->user_RoleRepository[$userid];
     }
 
     //

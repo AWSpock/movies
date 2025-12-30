@@ -57,7 +57,7 @@ class RouteParser
 
         /* details */
         if (preg_match("~^/movie/(\d+)/summary$~", $this->request)) {
-            $this->resourcePath = "/movie/index";
+            $this->resourcePath = "/movie/summary";
             return;
         }
         if (preg_match("~^/genre/(\d+)$~", $this->request)) {

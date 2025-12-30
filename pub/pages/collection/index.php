@@ -12,7 +12,13 @@
 <div class="content">
     <div class="row">
         <div class="options">
-            <a href="/collection/create" class="button secondary"><i class="fa-solid fa-plus"></i>Create Collection</a>
+            <?php
+            if ($data->user_roles($userAuth->user()->id())->hasRole("manager")) {
+            ?>
+                <a href="/collection/create" class="button secondary"><i class="fa-solid fa-plus"></i>Create Collection</a>
+            <?php
+            }
+            ?>
         </div>
     </div>
 

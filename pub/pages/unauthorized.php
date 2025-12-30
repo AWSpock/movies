@@ -11,6 +11,20 @@
 
 <div class="content">
 	<div class="row">
-		<p>You are not authorized for this utility. Please contact <a href="mailto:awspock@gmail.com?subject=Unauthorized Access">Alex</a> if you think this message is in error.</p>
+		<div class="alert alert-warning">
+			<p>
+				<?php
+				$message = $_GET['message'];
+				if (isset($message) && $message !== '') {
+					echo urldecode($message);
+				} else {
+				?>
+					You are not authorized for this utility.
+				<?php
+				}
+				?>
+			</p>
+		</div>
+		<p>Please contact <a href="mailto:awspock@gmail.com?subject=Unauthorized Access">Alex</a> if you think this message is in error.</p>
 	</div>
 </div>

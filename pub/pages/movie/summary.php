@@ -12,7 +12,13 @@
 <div class="content">
     <div class="row">
         <div class="options">
-            <a href="/movie/<?php echo htmlentities($recMovie->id()); ?>/edit" class="button secondary"><i class="fa-solid fa-pencil"></i>Edit Movie</a>
+            <?php
+            if ($data->user_roles($userAuth->user()->id())->hasRole("manager")) {
+            ?>
+                <a href="/movie/<?php echo htmlentities($recMovie->id()); ?>/edit" class="button secondary"><i class="fa-solid fa-pencil"></i>Edit Movie</a>
+            <?php
+            }
+            ?>
         </div>
     </div>
 

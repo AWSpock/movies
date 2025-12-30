@@ -1,5 +1,11 @@
 <?php
 
+if (!$data->user_roles($userAuth->user()->id())->hasRole("manager")) {
+    echo "Unauthorized";
+    http_response_code(401);
+    die();
+}
+
 switch ($_SERVER["REQUEST_METHOD"]) {
     case "GET":
         if (isset($movie_id)) {

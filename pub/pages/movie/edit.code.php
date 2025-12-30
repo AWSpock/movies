@@ -1,5 +1,10 @@
 <?php
 
+if (!$data->user_roles($userAuth->user()->id())->hasRole("manager")) {
+    header('Location: /unauthorized?message=' . urlencode("Not a manager."));
+    die();
+}
+
 $movieData = $data->movies();
 
 $recMovie = $movieData->getRecordById($movie_id);
