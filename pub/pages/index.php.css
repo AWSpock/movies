@@ -69,6 +69,7 @@
   margin-block: 0;
   text-align: center;
   font-size: 1rem;
+  white-space: break-spaces;
 }
 .movie-info .info .release_date {
   grid-area: release_date;
